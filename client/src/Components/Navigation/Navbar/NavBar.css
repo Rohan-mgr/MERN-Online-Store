@@ -1,0 +1,16 @@
+.bg-Navbar {
+    background-color: #f1b355;
+}
+.me-auto {
+    justify-content: flex-end;
+}
+a{
+    color: #000;
+}
+.active {
+    color: rgb(61, 61, 192) !important;
+}   
+button {
+    background: transparent;
+    border: none; 
+}

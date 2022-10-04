@@ -1,0 +1,7 @@
+button {
+    margin-right: 10px !important; 
+}
+.card {
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 15px #ccc;
+}
