@@ -1,0 +1,19 @@
+.orders {
+    padding: 10px;
+    list-style-type: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+.orders__item h2 {
+    font-size: clamp(1rem, 2vw, 2.5rem) !important;
+}
+.orders__products {
+    list-style-type: none;
+    margin-bottom: 10px;
+    padding: 0 !important;
+}
+.orders__products .orders__products__item {
+    border: 2px solid #5858cc;
+    margin: 5px;
+    padding: 5px;
+}
