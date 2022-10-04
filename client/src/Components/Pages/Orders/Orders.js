@@ -17,13 +17,14 @@ function Orders(props) {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
+        setOrderedItems(resData.orderedItems);
       })
       .catch((err) => {
         throw new Error(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(orderedItems);
   return <div>Order items</div>;
 }
 
