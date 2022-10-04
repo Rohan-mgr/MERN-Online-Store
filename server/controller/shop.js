@@ -100,7 +100,6 @@ exports.deleteCartItem = async (req, res, next) => {
 };
 
 exports.getCheckoutSuccess = async (req, res, next) => {
-  console.log(req.params.id, "checkout");
   const userId = req.params.id;
   try {
     const user = await User.findById(userId);
