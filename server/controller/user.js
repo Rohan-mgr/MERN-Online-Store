@@ -1,9 +1,18 @@
 require("dotenv").config();
 const User = require("../model/user");
-const Product = require("../model/product");
+const nodemailer = require("nodemailer");
+const sgTransport = require("nodemailer-sendgrid-transport");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+
+const mailer = nodemailer.createTransport(
+  sgTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY,
+    },
+  })
+);
 
 exports.createUser = async (req, res, next) => {
   const errors = validationResult(req);
@@ -31,6 +40,24 @@ exports.createUser = async (req, res, next) => {
       cart: { items: [] },
     });
     const result = await user.save();
+    mailer.sendMail(
+      {
+        to: email,
+        from: "rohan.magar.415@gmail.com",
+        fromname: "Rohan Rana Magar",
+        subject: "Signup Succeeded!",
+        html: `<div style="text-align: center;">
+          <h2>Welcome ${name}</h2>
+          <p><span style="color:red;">Congratulations!!! </span>You have successfully signed up to online store.</p>
+        </div>`,
+      },
+      function (err, res) {
+        if (err) {
+          throw err;
+        }
+        console.log(res);
+      }
+    );
     res
       .status(200)
       .json({ message: "user created successfully", userId: result._id });
