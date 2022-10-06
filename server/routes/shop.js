@@ -9,6 +9,7 @@ router.get("/cart", isAuth, shopController.getCartProducts);
 router.get("/checkout", isAuth, shopController.getCheckout);
 router.get("/checkout/success/:id", shopController.getCheckoutSuccess);
 router.get("/orders", isAuth, shopController.getOrders);
+router.get("/orders/:orderId", isAuth, shopController.getInvoice);
 
 router.post("/cart", isAuth, shopController.addToCart);
 router.post("/checkout", isAuth, shopController.postCheckout);

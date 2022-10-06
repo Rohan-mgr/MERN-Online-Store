@@ -3,6 +3,9 @@ require("dotenv").config();
 const User = require("../model/user");
 const Order = require("../model/order");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
 
 exports.getProducts = async (req, res, next) => {
   try {
@@ -157,7 +160,6 @@ exports.getCheckout = async (req, res, next) => {
 
 exports.postCheckout = async (req, res, next) => {
   const items = req.body.prods;
-  console.log(items, req.userId);
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -193,7 +195,6 @@ exports.postCheckout = async (req, res, next) => {
 exports.getOrders = async (req, res, next) => {
   try {
     const orders = await Order.find({ "user.userId": req.userId });
-    console.log(orders);
     res
       .status(200)
       .json({ message: "order fetched successfully", orderedItems: orders });
@@ -203,4 +204,41 @@ exports.getOrders = async (req, res, next) => {
     }
     next(error);
   }
+};
+
+exports.getInvoice = async (req, res, next) => {
+  const orderId = req.params.orderId;
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return next(new Error("No order found!"));
+  }
+  if (order.user.userId.toString() !== req.userId.toString()) {
+    return next(new Error("Unauthorized User"));
+  }
+  const invoiceName = "invoice-" + orderId + ".pdf";
+  const invoicePath = path.join("data", "invoice", invoiceName);
+
+  const pdfDoc = new PDFDocument();
+  res.setHeader("Content-Type", "application/pdf");
+
+  res.setHeader(
+    "Content-Disposition",
+    'inline; filename="' + invoiceName + '"'
+  );
+  pdfDoc.pipe(fs.createWriteStream(invoicePath));
+  pdfDoc.pipe(res);
+  pdfDoc.fontSize(26).text("Order Invoice", { underline: true });
+  pdfDoc.text("---------------------------------");
+  let totalCost = 0;
+  order.products.forEach((prod) => {
+    totalCost += prod.quantity * prod.product.price;
+    pdfDoc
+      .fontSize(16)
+      .text(
+        `${prod.product.title} = ${prod.quantity}(Quantity) * ${prod.product.price}(Unit Price)`
+      );
+  });
+  pdfDoc.text("-----------------------------------------------------");
+  pdfDoc.fontSize(28).text(`Total Amount = $${totalCost}`);
+  pdfDoc.end();
 };
