@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import "./Orders.css";
 
 function Orders(props) {
@@ -35,7 +35,7 @@ function Orders(props) {
             return (
               <li className="orders__item">
                 <h2>
-                  Order - # {p._id} - <a>Invoice</a>
+                  Order - # {p._id} - <a href={`orders/${p._id}`}>Invoice</a>
                 </h2>
                 <ul class="orders__products">
                   {p.products.map((i) => {
