@@ -36,7 +36,7 @@ exports.postUserMessage = (req, res, next) => {
           <p>${message}</p>
         </div>`,
   });
-  res.status(200).json({ message: "Message delivered successfully." });
+  res.status(200).json({ message: "Message sent successfully." });
 };
 
 exports.getProducts = async (req, res, next) => {
