@@ -36,7 +36,7 @@ function ProductDetails(props) {
   }, []);
 
   return (
-    <div className="text-center pt-3">
+    <div className="text-center mt-5">
       <h3>Product Details</h3>
       <h4 style={{ color: "#f1b355" }}>{productDetails.title}</h4>
       <Image
@@ -63,12 +63,14 @@ function ProductDetails(props) {
         </span>
         {productDetails.description}
       </p>
-      <button
-        className="btn btn-warning"
-        onClick={() => props.AddToCart(props.router.params.productId)}
-      >
-        Add To Cart
-      </button>
+      {props.isAuth && (
+        <button
+          className="btn btn-warning"
+          onClick={() => props.AddToCart(props.router.params.productId)}
+        >
+          Add To Cart
+        </button>
+      )}
     </div>
   );
 }

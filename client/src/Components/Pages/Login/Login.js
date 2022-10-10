@@ -48,7 +48,7 @@ function Login(props) {
 
   return (
     <Form
-      className="col-lg-4 col-md-8 col-sm-5 col-10 mx-auto pt-3 text-center"
+      className="col-lg-4 col-md-8 col-sm-5 col-10 mx-auto pt-3 text-center mt-5"
       onSubmit={(e) => handleLogin(e, userCredentials)}
     >
       {!!errors.loginError && (

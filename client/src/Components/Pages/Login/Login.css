@@ -4,6 +4,9 @@ form {
     padding: 10px; 
     color: #f1b355 !important;
 }
+.mt-5 {
+    margin-top: 6rem !important;
+}
 .outline-eye {
     position: absolute;
     bottom: 8px; 

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import "./Orders.css";
+import Loader from "../../UI/Loader/Loader";
+import { connect } from "react-redux";
+import * as actions from "../../../store/action/index";
 
 function Orders(props) {
-  const navigate = useNavigate();
   const [orderedItems, setOrderedItems] = useState([]);
   useEffect(() => {
+    props.onLoading();
+    console.log(props.token);
     fetch("http://localhost:3080/orders", {
-      method: "GET",
       headers: {
         Authorization: "Bearer " + props.token,
       },
@@ -21,14 +23,15 @@ function Orders(props) {
         return res.json();
       })
       .then((resData) => {
+        props.onFinishLoading();
         setOrderedItems(resData.orderedItems);
       })
       .catch((err) => {
+        props.onFinishLoading();
         throw new Error(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  console.log(orderedItems);
+  }, [props.token]);
 
   const handleInvoice = (orderId) => {
     let fileName;
@@ -65,10 +68,12 @@ function Orders(props) {
   };
 
   return (
-    <Container>
-      {orderedItems.length > 0 ? (
+    <Container className="mt-5">
+      {props.isLoading ? (
+        <Loader />
+      ) : orderedItems?.length > 0 ? (
         <ul className="orders">
-          {orderedItems.map((p) => {
+          {orderedItems?.map((p) => {
             return (
               <li key={p._id} className="orders__item">
                 <h2>
@@ -76,7 +81,7 @@ function Orders(props) {
                   <button onClick={() => handleInvoice(p._id)}>Invoice</button>
                 </h2>
                 <ul className="orders__products">
-                  {p.products.map((i) => {
+                  {p.products?.map((i) => {
                     return (
                       <li key={i._id} className="orders__products__item">
                         {i.product.title} ({i.quantity})
@@ -91,8 +96,22 @@ function Orders(props) {
       ) : (
         <h2 className="text-center">No products available!</h2>
       )}
+      {/* <h1>orders</h1> */}
     </Container>
   );
 }
 
-export default Orders;
+const mapStateToProps = (state) => {
+  return {
+    isLoading: state.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLoading: () => dispatch(actions.initLoading()),
+    onFinishLoading: () => dispatch(actions.finishLoading()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);

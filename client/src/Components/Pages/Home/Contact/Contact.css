@@ -1,0 +1,17 @@
+/* .contact_container {
+    margin-right: 0.7rem !important;
+} */
+.contact_container h2{
+    border-bottom: 3px solid #f1b355;
+    width: fit-content;
+    margin: 0 auto;
+}
+.contact_container form {
+    box-shadow: none !important;
+}
+button {
+    background: transparent !important;
+    border-width: 2px !important;
+    width: fit-content;
+    height: 3.2rem !important;
+}

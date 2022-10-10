@@ -79,24 +79,28 @@ exports.postLogin = async (req, res, next) => {
       const error = new Error("User does not Exists!");
       error.statusCode = 401;
       throw error;
-    } else {
-      await bcrypt.compare(password, user.password);
-      const token = jwt.sign(
-        {
-          email: email,
-          userId: user._id.toString(),
-        },
-        process.env.JWT_TOKEN_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
-      res.status(200).json({
-        message: "Login Successfull",
-        token: token,
-        userId: user._id.toString(),
-      });
     }
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      const error = new Error("Invalid UserName or Password");
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = jwt.sign(
+      {
+        email: email,
+        userId: user._id.toString(),
+      },
+      process.env.JWT_TOKEN_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.status(200).json({
+      message: "Login Successfull",
+      token: token,
+      userId: user._id.toString(),
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;

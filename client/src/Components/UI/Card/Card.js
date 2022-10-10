@@ -28,7 +28,7 @@ function ProductCard(props) {
           </div>
         )}
         {!props.isAdmin && (
-          <div>
+          <div className="admin__buttons">
             <Link to={`/product/${_id}`} className="btn btn-primary mr-2">
               Details
             </Link>

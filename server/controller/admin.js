@@ -6,6 +6,7 @@ exports.createPost = async (req, res, next) => {
   const title = req.body.title;
   const price = req.body.price;
   const description = req.body.description;
+  // console.log(req.userId);
 
   if (!req.file) {
     const err = new Error("Image not provided");
@@ -18,7 +19,7 @@ exports.createPost = async (req, res, next) => {
     imageUrl: imageUrl,
     price: price,
     description: description,
-    userId: req.userId,
+    // userId: req.userId,
   });
 
   try {

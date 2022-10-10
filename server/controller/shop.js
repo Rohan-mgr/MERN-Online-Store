@@ -1,11 +1,43 @@
 const Product = require("../model/product");
 require("dotenv").config();
 const User = require("../model/user");
+const nodemailer = require("nodemailer");
+const sgTransport = require("nodemailer-sendgrid-transport");
 const Order = require("../model/order");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+
+const mailer = nodemailer.createTransport(
+  sgTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY,
+    },
+  })
+);
+
+exports.postUserMessage = (req, res, next) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const subject = req.body.subject;
+  const message = req.body.message;
+  console.log(name, email, typeof email, subject, message);
+
+  mailer.sendMail({
+    to: "rohan.magar.415@gmail.com",
+    from: "rohan.magar.415@gmail.com",
+    replyTo: email,
+    fromname: name,
+    subject: subject,
+    html: `<div style="text-align: center;">
+          <h2>Message From ${name}</h2>
+          <p>Sender Email: ${email}</p>
+          <p>${message}</p>
+        </div>`,
+  });
+  res.status(200).json({ message: "Message delivered successfully." });
+};
 
 exports.getProducts = async (req, res, next) => {
   try {
@@ -72,6 +104,12 @@ exports.getCartProducts = async (req, res, next) => {
       throw error;
     }
     const { cart } = await user.populate("cart.items.productId");
+    if (!cart) {
+      const error = new Error("No Items added to cart");
+      error.statusCode = 404;
+      throw error;
+    }
+    console.log(cart);
     res.status(200).json({ cartItems: cart.items });
   } catch (error) {
     if (!error.statusCode) {
@@ -83,7 +121,6 @@ exports.getCartProducts = async (req, res, next) => {
 
 exports.deleteCartItem = async (req, res, next) => {
   const cartProductId = req.params.cartItemId;
-  console.log(cartProductId);
   try {
     const user = await User.findById(req.userId);
     if (!user) {
@@ -194,7 +231,15 @@ exports.postCheckout = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
+    if (!req.userId) {
+      const error = new Error("User does not Exists!");
+      throw error;
+    }
     const orders = await Order.find({ "user.userId": req.userId });
+    if (!orders) {
+      const error = new Error("No products ordered");
+      throw error;
+    }
     res
       .status(200)
       .json({ message: "order fetched successfully", orderedItems: orders });

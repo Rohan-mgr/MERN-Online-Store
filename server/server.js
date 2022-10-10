@@ -55,7 +55,7 @@ app.use(shopRoutes);
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
-  console.log(message);
+  console.log(message, "message");
   res.status(status).json({ message: message });
 });
 

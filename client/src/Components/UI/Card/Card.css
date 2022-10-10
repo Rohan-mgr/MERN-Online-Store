@@ -5,3 +5,6 @@ button {
     border: 1px solid #ccc;
     box-shadow: 0 2px 15px #ccc;
 }
+.card-body {
+    padding: 1rem !important;
+}

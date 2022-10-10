@@ -31,7 +31,7 @@ export const validateForm = (formData, method) => {
 
 export const cartTotalPrice = (items) => {
   let sum = 0;
-  items.map((p) => {
+  items?.map((p) => {
     return (sum += p.productId.price * p.quantity);
   });
   return sum;

@@ -60,7 +60,7 @@ function Checkout(props) {
   };
 
   return (
-    <Container className="my-3 col-11 text-center">
+    <Container className="mt-5 col-11 text-center">
       {checkoutItems.items.length > 0 ? (
         <>
           {checkoutItems.items.map((i) => {

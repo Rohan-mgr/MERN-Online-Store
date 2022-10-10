@@ -103,7 +103,7 @@ function AddProduct(props) {
       });
   };
   return (
-    <div>
+    <div className="mt-5">
       <h2 className="text-center">
         {props.isEditing ? "Edit the Product" : "Add New Product"}
       </h2>

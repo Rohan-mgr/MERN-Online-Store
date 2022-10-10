@@ -73,7 +73,7 @@ function AdminProduct(props) {
   };
 
   return (
-    <Container fluid={true} className="pt-3">
+    <Container fluid={true} className="mt-5">
       {productDetails.products.length > 0 ? (
         <Row>
           {productDetails.products.map((product) => {

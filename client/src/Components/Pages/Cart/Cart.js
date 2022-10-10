@@ -4,6 +4,7 @@ import CartItem from "./CartItem/CartItem";
 import * as actions from "../../../store/action/index";
 import { cartTotalPrice } from "../../../shared/utility";
 import { Link } from "react-router-dom";
+import Loader from "../../UI/Loader/Loader";
 
 function Cart(props) {
   const [cartProducts, setCartProducts] = useState({
@@ -12,8 +13,8 @@ function Cart(props) {
   });
   useEffect(() => {
     props.onLoading();
+    console.log(props.token);
     fetch("http://localhost:3080/cart", {
-      method: "GET",
       headers: {
         Authorization: "Bearer " + props.token,
       },
@@ -37,7 +38,7 @@ function Cart(props) {
         throw new Error(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.token]);
   const handleDeleteCartItem = (prodId) => {
     fetch(`http://localhost:3080/cart/${prodId}`, {
       method: "DELETE",
@@ -91,11 +92,11 @@ function Cart(props) {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 mt-5">
       {!props.isLoading ? (
-        cartProducts.products.length > 0 ? (
+        cartProducts.products?.length > 0 ? (
           <div className="text-center">
-            {cartProducts.products.map((p) => {
+            {cartProducts.products?.map((p) => {
               return (
                 <CartItem
                   key={p.productId._id}
@@ -121,7 +122,7 @@ function Cart(props) {
           <h2 className="text-center my-2">No Prouducts added to Cart</h2>
         )
       ) : (
-        <h2 className="text-center">Loading Cart Products...</h2>
+        <Loader />
       )}
     </div>
   );

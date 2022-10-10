@@ -13,6 +13,7 @@ import Checkout from "./Components/Pages/Checkout/Checkout";
 import AdminProducts from "./Components/Pages/Admin/products/AdminProducts";
 import Login from "./Components/Pages/Login/Login";
 import Signup from "./Components/Pages/Login/Signup/Signup";
+import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
 
 function App(props) {
   const navigate = useNavigate();
@@ -34,7 +35,6 @@ function App(props) {
     const userId = localStorage.getItem("userId");
     const remainingMilliseconds =
       new Date(expiryDate).getTime() - new Date().getTime();
-    console.log(remainingMilliseconds);
     setAuthState((prevState) => {
       return {
         ...prevState,
@@ -45,7 +45,7 @@ function App(props) {
     });
     setAutoLogout(remainingMilliseconds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authState.isAuth]);
 
   const handleUserCredentialsSubmission = (userData, setErrors) => {
     const formData = new FormData();
@@ -65,7 +65,6 @@ function App(props) {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
         navigate("/login");
       })
       .catch((err) => {
@@ -173,13 +172,13 @@ function App(props) {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
         navigate("/cart");
       })
       .catch((err) => {
         throw new Error(err);
       });
   };
+  console.log(authState.isAuth);
 
   return (
     <div className="App">
@@ -192,7 +191,6 @@ function App(props) {
       )}
       {/* <Nav /> */}
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route
           path="/product"
           element={
@@ -201,21 +199,23 @@ function App(props) {
         />
         <Route
           path="/product/:productId"
-          element={<ProductDetails {...props} AddToCart={handleAddToCart} />}
+          element={
+            <ProductDetails
+              {...props}
+              isAuth={authState.isAuth}
+              AddToCart={handleAddToCart}
+            />
+          }
         />
-        {authState.isAuth && (
-          <>
-            <Route path="/cart" element={<Cart token={authState.token} />} />
-            <Route
-              path="/orders"
-              element={<Orders token={authState.token} />}
-            />
-            <Route
-              path="/checkout"
-              element={<Checkout token={authState.token} />}
-            />
-          </>
-        )}
+        <Route element={<PrivateRoute {...authState} />}>
+          <Route path="/cart" element={<Cart token={authState.token} />} />
+          <Route path="/orders" element={<Orders token={authState.token} />} />
+        </Route>
+
+        <Route
+          path="/checkout"
+          element={<Checkout token={authState.token} />}
+        />
         <Route path="/login" element={<Login onSingIn={handleUserlogin} />} />
         <Route
           path="/signup"
@@ -228,7 +228,7 @@ function App(props) {
           />
           <Route path="products" element={<AdminProducts Admin={!showNav} />} />
         </Route>
-        {/* <Route path="*" element={<Navigate to="/" />} /> */}
+        <Route path="/" element={<Home />} />
       </Routes>
     </div>
   );

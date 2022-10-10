@@ -3,6 +3,7 @@ import Card from "../../UI/Card/Card";
 import { Container, Row, Col } from "react-bootstrap";
 import { connect } from "react-redux";
 import * as actions from "../../../store/action/index";
+import Loader from "../../UI/Loader/Loader";
 
 function Product(props) {
   const [productDetails, setProductDetails] = useState({
@@ -39,9 +40,9 @@ function Product(props) {
   }, []);
 
   return (
-    <Container fluid={true} className="pt-3">
+    <Container fluid={true} className="mt-5">
       {props.isLoading ? (
-        <h3 className="text-center">Loading Products...</h3>
+        <Loader />
       ) : productDetails.products.length > 0 ? (
         <Row>
           {productDetails.products.map((product) => {
