@@ -4,8 +4,10 @@ import "./Contact.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Loader from "../../../UI/Loader/Loader";
+import { connect } from "react-redux";
+import * as actions from "../../../../store/action/index";
 
-function Contact() {
+function Contact(props) {
   const [visitorMessage, setVisitorMessage] = useState({
     name: "",
     email: "",
@@ -24,6 +26,7 @@ function Contact() {
 
   const handleMessageSubmission = (e, message) => {
     e.preventDefault();
+    props.onLoading();
     fetch("/", {
       method: "POST",
       headers: {
@@ -40,6 +43,8 @@ function Contact() {
       })
       .then((resData) => {
         console.log(resData);
+        props.handleAlertStatus(true);
+        props.onFinishLoading();
         setVisitorMessage((prevState) => {
           return {
             ...prevState,
@@ -56,7 +61,7 @@ function Contact() {
   };
 
   return (
-    <Container className="contact_container col-11 col-lg-10 p-3">
+    <Container className="contact_container col-11 col-lg-10 p-3 mb-5">
       <Row>
         <Col>
           <h2>Contact Us</h2>
@@ -66,6 +71,7 @@ function Contact() {
               <Form.Control
                 type="text"
                 name="name"
+                required
                 value={visitorMessage.name}
                 placeholder="Enter Full Name"
                 onChange={(e) => handleInputChange(e)}
@@ -76,6 +82,7 @@ function Contact() {
               <Form.Control
                 type="email"
                 name="email"
+                required
                 value={visitorMessage.email}
                 placeholder="Enter E-mail"
                 onChange={(e) => handleInputChange(e)}
@@ -87,6 +94,7 @@ function Contact() {
               <Form.Control
                 type="text"
                 name="subject"
+                required
                 value={visitorMessage.subject}
                 placeholder="Enter Subject"
                 onChange={(e) => handleInputChange(e)}
@@ -97,15 +105,22 @@ function Contact() {
               <Form.Control
                 as="textarea"
                 name="message"
+                required
                 value={visitorMessage.message}
                 placeholder="Your Message..."
                 onChange={(e) => handleInputChange(e)}
                 style={{ height: "100px" }}
               />
             </Form.Group>
-            <Button variant="warning" type="submit">
-              {/* Send Message */}
-              <Loader Left="0" />
+            <Button variant="warning" type="submit" className="my-auto">
+              {props.isLoading ? (
+                <>
+                  <span style={{ color: "#f1b355" }}>Sending...</span>{" "}
+                  <Loader Left="0" />
+                </>
+              ) : (
+                <span>Send</span>
+              )}
             </Button>
           </Form>
         </Col>
@@ -114,4 +129,17 @@ function Contact() {
   );
 }
 
-export default Contact;
+const mapStateToProps = (state) => {
+  return {
+    isLoading: state.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLoading: () => dispatch(actions.initLoading()),
+    onFinishLoading: () => dispatch(actions.finishLoading()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contact);

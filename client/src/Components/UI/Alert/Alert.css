@@ -1,0 +1,8 @@
+.alert {
+    position: fixed !important;
+    bottom: 0 !important;
+    z-index: 99;
+}
+.alert p {
+    margin-bottom: 0 !important ;
+}

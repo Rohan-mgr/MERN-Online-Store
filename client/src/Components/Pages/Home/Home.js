@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "react-bootstrap/Image";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Contact from "./Contact/Contact";
 import "./Home.css";
+import AlertDismissible from "../../UI/Alert/Alert";
+import Footer from "../Admin/Admin-Sections/Footer";
 
 function Home() {
   const navigate = useNavigate();
+  const [alertStatus, setAlertStatus] = useState(false);
+  console.log(alertStatus);
+  setTimeout(() => {
+    if (alertStatus) {
+      setAlertStatus(false);
+    }
+  }, 5000);
   return (
     <>
+      <AlertDismissible
+        AlertStatus={alertStatus}
+        handleAlertStatus={setAlertStatus}
+      />
       <Container className="home_container">
         <Row className="col-12 home_row mx-auto">
           <Col className="home_col my-5">
@@ -28,7 +41,8 @@ function Home() {
           </Col>
         </Row>
       </Container>
-      <Contact />
+      <Contact handleAlertStatus={setAlertStatus} />
+      <Footer />
     </>
   );
 }
