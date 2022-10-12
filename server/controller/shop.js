@@ -17,12 +17,17 @@ const mailer = nodemailer.createTransport(
   })
 );
 
+exports.getHome = (req, res, next) => {
+  let count = 0;
+  count += 1;
+  console.log(count);
+};
+
 exports.postUserMessage = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const subject = req.body.subject;
   const message = req.body.message;
-  console.log(name, email, typeof email, subject, message);
 
   mailer.sendMail({
     to: "rohan.magar.415@gmail.com",
