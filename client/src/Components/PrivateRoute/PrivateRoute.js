@@ -3,10 +3,11 @@ import { Navigate, Outlet } from "react-router-dom";
 import Loader from "../UI/Loader/Loader";
 
 const PrivateRoute = (props) => {
-  console.log(props.isAuth);
-  if (props.isAuth === undefined) {
-    return <Loader />;
+  if (props.isAuth === false) {
+    <Loader />;
   }
+  console.log(props.isAuth);
+
   return props.isAuth ? <Outlet /> : <Navigate to="/login" />;
 };
 

@@ -6,11 +6,16 @@ import Contact from "./Contact/Contact";
 import "./Home.css";
 import AlertDismissible from "../../UI/Alert/Alert";
 import Footer from "../Admin/Admin-Sections/Footer";
+import countapi from "countapi-js";
 
 function Home() {
   const navigate = useNavigate();
   const [alertStatus, setAlertStatus] = useState(false);
-  console.log(alertStatus);
+
+  countapi.visits().then((result) => {
+    console.log(result.value);
+  });
+
   setTimeout(() => {
     if (alertStatus) {
       setAlertStatus(false);

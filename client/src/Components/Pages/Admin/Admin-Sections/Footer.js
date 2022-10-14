@@ -8,7 +8,7 @@ function Footer() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "3rem",
+        height: "4rem",
       }}
     >
       <p style={{ margin: 0, padding: 0 }}>

@@ -44,6 +44,7 @@ function Contact(props) {
       .then((resData) => {
         console.log(resData);
         props.handleAlertStatus(true);
+        window.scrollTo(0, 0);
         props.onFinishLoading();
         setVisitorMessage((prevState) => {
           return {
@@ -119,7 +120,7 @@ function Contact(props) {
                   <Loader Left="0" />
                 </>
               ) : (
-                <span>Send</span>
+                <span style={{ color: "#f1b355" }}>Send</span>
               )}
             </Button>
           </Form>

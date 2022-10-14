@@ -10,7 +10,6 @@ import {
   legacy_createStore as createStore,
   applyMiddleware,
   compose,
-  combineReducers,
 } from "redux";
 import productReducer from "./store/reducer/product";
 
